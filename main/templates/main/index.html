@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4">
+            <form id="task" class="form-row">
+                <input class="form-control" name="name" type="text" placeholder="Название">
+                <textarea class="form-control" name="description" placeholder="Описание" rows="5"></textarea>
+            </form>
+            <br>
+            <button class="btn btn-primary" onclick="createTask()">Создать</button>
+
+        </div>
+        <div class="col-lg-8">
+            <input id="search" class="form-control" name="text" type="text" placeholder="Поиск по названию">
+            <br>
+            <button class="btn btn-primary" onclick="search_task()">Поиск</button>
+            <div id="result"></div>
+        </div>
+    </div><br>
+    <div id="list" class="col-lg-12">
+    </div>
+    <script type="text/javascript">
+        function createTask() {
+            var name = $("#task input").val();
+            var description = $("#task textarea").val();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'main:create_task' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    name: name,
+                    description: description
+                },
+                success: function () {
+                    $("#task input").val('');
+                    $("#task textarea").val('');
+                    updateTasks();
+                }
+            });
+        }
+
+        function updateTasks() {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'main:update_tasks' %}",
+                success: function (html) {
+                    $("#list").html(html);
+                }
+            });
+        }
+
+        function search_task() {
+            var data = $("#search").serialize();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'main:search' %}",
+                data: data,
+                success: function (html) {
+                    $("#result").html(html);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            updateTasks();
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,11 @@
+<table class="table">
+    <th>Название</th>
+    <th>Описание</th>
+    {% for task in tasks %}
+        <tr>
+            <td>{{ task.name }}</td>
+            <td>{{ task.description }}</td>
+        </tr>
+    {% endfor %}
+</table>
+

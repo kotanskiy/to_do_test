@@ -1,0 +1,8 @@
+<table class="table">
+    {% for task in tasks %}
+        <tr>
+            <td>{{ task.name|truncatechars:20 }}</td>
+            <td>{{ task.description|truncatechars:40 }}</td>
+        </tr>
+    {% endfor %}
+</table>
