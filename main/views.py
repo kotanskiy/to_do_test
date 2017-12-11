@@ -12,6 +12,7 @@ def create_task(request):
         task = Task(name=request.POST.get('name'), description=request.POST.get('description'))
         task.save()
         return response.HttpResponse('success')
+    return response.HttpResponse('request is empty')
 
 
 def get_tasks(request):
@@ -24,6 +25,7 @@ def search(request):
     text = request.GET.get('text')
     if len(text.strip()) > 3:
         context = {
-            'tasks': Task.objects.filter(name__contains=text)
+            'tasks': Task.objects.filter(name__contains=text.strip())
         }
         return render_to_response('main/search_results.html', context)
+    return response.HttpResponse('Должно быть не меньше 3 символов')
